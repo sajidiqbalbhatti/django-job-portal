@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="company-description">
+      <h1>All Companies</h1>
+
+      {% for company in companies %}
+      <h3>
+        <a href="{% url 'companies:company_detail' company.pk %}">
+          {{ company.name }}
+        </a>
+      </h3>
+      <a href="{{ company.website }}">Apply now</a>
+      <h4>{{ company.website }}</h4>
+      <p>{{ company.country }}</p>
+
+      {% empty %}
+      <p>No companies found.</p>
+      {% endfor %}
+    </div>
+  </body>
+</html>

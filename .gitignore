@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.env
+*.venv
+*.DS_Store
+
+# Django
+db.sqlite3
+/staticfiles/
+media/
+
+# VSCode / IDE
+.vscode/
+.idea/

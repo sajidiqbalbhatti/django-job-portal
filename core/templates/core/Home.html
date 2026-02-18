@@ -1,0 +1,443 @@
+{% extends "core/base.html" %} {% block hero %}
+<section class="hero-section">
+  <div class="container text-center">
+    <h1 class="hero-title">Discover Opportunities That Define Your Future</h1>
+
+    <p class="hero-description">
+      A global platform connecting ambitious professionals with forward-thinking
+      companies. Explore verified job opportunities and take the next step in
+      your career journey.
+    </p>
+
+    <div class="hero-buttons">
+      <a
+        href="{% url 'jobs:job_search' %}"
+        class="btn btn-dark btn-lg me-3 px-4"
+      >
+        Explore Jobs
+      </a>
+      <a href="#" class="btn btn-outline-dark btn-lg px-4"> Post a Job </a>
+    </div>
+  </div>
+</section>
+
+{% endblock %} {% block stats_section %}
+<section class="stats-section">
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-md-3 col-6 mb-4">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-briefcase"></i></div>
+          <h2 class="stat-number" data-target="10000">30000</h2>
+          <p class="stat-text">Active Job Listings</p>
+        </div>
+      </div>
+
+      <div class="col-md-3 col-6 mb-4">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-building"></i></div>
+          <h2 class="stat-number" data-target="5200">400</h2>
+          <p class="stat-text">Verified Companies</p>
+        </div>
+      </div>
+
+      <div class="col-md-3 col-6 mb-4">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-globe"></i></div>
+          <h2 class="stat-number" data-target="35">5</h2>
+          <p class="stat-text">Countries Covered</p>
+        </div>
+      </div>
+
+      <div class="col-md-3 col-6 mb-4">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-people"></i></div>
+          <h2 class="stat-number" data-target="50000">1000</h2>
+          <p class="stat-text">Registered Professionals</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %} {% block how_it_works %}
+<section class="how-it-works py-5">
+  <div class="container text-center">
+    <h2 class="section-title mb-4">How It Works</h2>
+    <p class="section-description mb-5">
+      Explore jobs or hire top talent in a few simple steps. Our platform
+      simplifies the process and connects you to opportunities globally.
+    </p>
+
+    <div class="row g-4 justify-content-center">
+      <!-- Step 1 -->
+      <div class="col-md-4 col-6">
+        <div class="work-card p-5">
+          <div class="work-icon mb-4">
+            <i class="bi bi-search"></i>
+          </div>
+          <h4 class="work-title mb-2">Search Jobs</h4>
+          <p class="work-description">
+            Browse thousands of verified job listings using advanced filters for
+            category, location, and type.
+          </p>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="col-md-4 col-6">
+        <div class="work-card p-5">
+          <div class="work-icon mb-4">
+            <i class="bi bi-file-earmark-person"></i>
+          </div>
+          <h4 class="work-title mb-2">Apply Effortlessly</h4>
+          <p class="work-description">
+            Submit your CV and profile directly to employers in just a few
+            clicks.
+          </p>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="col-md-4 col-6">
+        <div class="work-card p-5">
+          <div class="work-icon mb-4">
+            <i class="bi bi-briefcase-check"></i>
+          </div>
+          <h4 class="work-title mb-2">Get Hired</h4>
+          <p class="work-description">
+            Connect with top companies worldwide and land the job that matches
+            your skills.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %} {% block job_categories %}
+<section class="job-categories py-5 bg-light">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="section-title">Job Categories</h2>
+      <p class="section-description">
+        Explore jobs by category and find the perfect match for your skills.
+      </p>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+      <!-- Example Category Cards -->
+      <div class="col-lg-2 col-md-3 col-6">
+        <div class="category-card text-center p-4">
+          <div class="category-icon mb-3">
+            <i class="bi bi-laptop"></i>
+          </div>
+          <h5 class="category-name">Developer</h5>
+          <a
+            href="{% url 'jobs:job_search' %}?category=developer"
+            class="stretched-link"
+          ></a>
+        </div>
+      </div>
+
+      <div class="col-lg-2 col-md-3 col-6">
+        <div class="category-card text-center p-4">
+          <div class="category-icon mb-3">
+            <i class="bi bi-heart-pulse"></i>
+          </div>
+          <h5 class="category-name">Health</h5>
+          <a
+            href="{% url 'jobs:job_search' %}?category=health"
+            class="stretched-link"
+          ></a>
+        </div>
+      </div>
+
+      <div class="col-lg-2 col-md-3 col-6">
+        <div class="category-card text-center p-4">
+          <div class="category-icon mb-3">
+            <i class="bi bi-building"></i>
+          </div>
+          <h5 class="category-name">Finance</h5>
+          <a
+            href="{% url 'jobs:job_search' %}?category=finance"
+            class="stretched-link"
+          ></a>
+        </div>
+      </div>
+
+      <div class="col-lg-2 col-md-3 col-6">
+        <div class="category-card text-center p-4">
+          <div class="category-icon mb-3">
+            <i class="bi bi-basket"></i>
+          </div>
+          <h5 class="category-name">Marketing</h5>
+          <a
+            href="{% url 'jobs:job_search' %}?category=marketing"
+            class="stretched-link"
+          ></a>
+        </div>
+      </div>
+
+      <div class="col-lg-2 col-md-3 col-6">
+        <div class="category-card text-center p-4">
+          <div class="category-icon mb-3">
+            <i class="bi bi-shield-lock"></i>
+          </div>
+          <h5 class="category-name">Security</h5>
+          <a
+            href="{% url 'jobs:job_search' %}?category=security"
+            class="stretched-link"
+          ></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+<!-- search block-->
+{% block search %}
+<section class="search-section py-5">
+  <div class="container">
+    <div class="card search-card mx-auto">
+      <div class="card-body p-4">
+        <form method="get" action="{% url 'jobs:job_search' %}">
+          <!-- Top Row -->
+          <div class="row g-3">
+            <div class="container py-2 text-center">
+              <div
+                class="d-flex justify-content-center align-items-center mb-2 text-success"
+              >
+                <!-- Bootstrap Icon (Search) -->
+                <i class="bi bi-search fs-4 me-2"></i>
+
+                <h1 class="h2 fw-semibold mb-0">Search Jobs</h1>
+              </div>
+
+              <p class="text-muted">
+                Find opportunities that match your skills and career goals
+              </p>
+            </div>
+
+            <!-- Job Title -->
+            <div class="col-lg-3 col-md-6">
+              <input
+                type="text"
+                class="form-control"
+                name="q"
+                placeholder="Job Title"
+                value="{{ keyword }}"
+              />
+            </div>
+
+            <!-- Location -->
+            <div class="col-lg-3 col-md-6">
+              <input
+                type="text"
+                class="form-control"
+                name="location"
+                placeholder="Location"
+                value="{{ location }}"
+              />
+            </div>
+
+            <!-- Job Type -->
+            <div class="col-lg-3 col-md-6">
+              <select class="form-select" name="job_type">
+                <option value="">All Job Types</option>
+
+                {% for jt in job_types %}
+                <option value="{{ jt.slug }}">{{ jt.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <!-- Category -->
+            <div class="col-lg-3 col-md-6">
+              <select class="form-select" name="category">
+                <option value="">Category</option>
+                {% for category in categories %}
+                <option value="{{ category.slug }}">{{ category.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <!-- Info Text Center -->
+          <div class="mt-4 text-center">
+            <small class="search-info">
+              You can search using one or more fields. For more accurate
+              results, try filling all fields.
+            </small>
+          </div>
+
+          <!-- Button -->
+          <div class="mt-3">
+            <button type="submit" class="btn btn-dark w-100 search-btn">
+              Search Jobs
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+<!--job list-->
+
+{% block job_list %}
+<div id="jobs-section">
+  <div class="container py-5">
+    <!-- Heading -->
+    <div class="text-center mb-4">
+      <h1 class="fw-semibold text-success my-4">
+        <i class="bi bi-briefcase-fill me-2"></i>
+        Explore Global Opportunities
+      </h1>
+      <p class="text-muted">
+        Discover verified jobs from top companies worldwide
+      </p>
+    </div>
+
+    <!-- Top 3 Country Filters -->
+    <div class="d-flex flex-wrap justify-content-center gap-3 mb-5">
+      {% for c in countries %}
+      <a
+        href="?country={{ c.slug }}#jobs-section"
+        class="btn btn-outline-primary btn-lg rounded-pill d-flex align-items-center justify-content-center {% if request.GET.country == c.slug %}active{% endif %}"
+        style="
+          min-width: 140px;
+          padding: 0.7rem 1.2rem;
+          font-weight: 500;
+          text-align: center;
+        "
+      >
+        {{ c.name }}
+      </a>
+      {% endfor %}
+    </div>
+
+    <!-- Jobs Row -->
+    <div class="row g-4">
+      {% for job in page_obj %}
+      <div class="col-md-4">
+        <div class="card job-card shadow-sm h-100">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title fw-semibold">{{ job.title }}</h5>
+            <p class="mb-1 fw-medium">
+              <i class="bi bi-building me-1 text-success"></i>
+              {{ job.company.name }}
+            </p>
+            <p class="job-meta mb-2">
+              <i class="bi bi-geo-alt me-1"></i>
+              {{ job.location }}, {{ job.country.name }}
+            </p>
+            <p class="job-meta mb-2">
+              {{ job.category.name }} • {{ job.job_type }}
+            </p>
+            <div class="mt-auto">
+              <a
+                href="{% url 'jobs:job_detail' slug=job.slug %}"
+                class="btn btn-success w-100"
+                >View Details</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12 text-center text-muted">No jobs available.</div>
+      {% endfor %}
+    </div>
+
+    <!-- Pagination Buttons -->
+    <!-- Professional Pagination -->
+    <nav aria-label="Job Pagination" class="mt-4">
+      <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a
+            class="btn btn-outline-success me-2"
+            href="?page={{ page_obj.previous_page_number }}{% if request.GET.country %}&country={{ request.GET.country }}{% endif %}#jobs-section"
+          >
+            &laquo; Previous
+          </a>
+        </li>
+        {% else %}
+        <li class="page-item">
+          <span class="btn btn-outline-secondary me-2 disabled"
+            >&laquo; Previous</span
+          >
+        </li>
+        {% endif %} {% if page_obj.has_next %}
+        <li class="page-item">
+          <a
+            class="btn btn-outline-success"
+            href="?page={{ page_obj.next_page_number }}{% if request.GET.country %}&country={{ request.GET.country }}{% endif %}#jobs-section"
+          >
+            Next &raquo;
+          </a>
+        </li>
+        {% else %}
+        <li class="page-item">
+          <span class="btn btn-outline-secondary disabled">Next &raquo;</span>
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+  </div>
+</div>
+{% endblock %}
+
+<!-- footer-->
+{% block footer %}
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <!-- Company Info -->
+      <div class="footer-col">
+        <h3 class="footer-logo">FindFit Jobs</h3>
+        <p>
+          Your trusted platform to find the best jobs worldwide. Connecting
+          talent with opportunity.
+        </p>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="">Browse Jobs</a></li>
+          <li><a href="#">Companies</a></li>
+          <li><a href="#">Categories</a></li>
+          <li><a href="#">Post a Job</a></li>
+        </ul>
+      </div>
+
+      <!-- Job Categories -->
+      <div class="footer-col">
+        <h4>Top Categories</h4>
+        <ul>
+          <li><a href="#">IT & Software</a></li>
+          <li><a href="#">Marketing</a></li>
+          <li><a href="#">Finance</a></li>
+          <li><a href="#">Healthcare</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li>Email: support@findfit.com</li>
+          <li>Phone: +1 234 567 890</li>
+          <li>Location: New York, USA</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2026 FindFit Jobs. All Rights Reserved.</p>
+    </div>
+  </div>
+</footer>
+{% endblock %}

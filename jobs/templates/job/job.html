@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    {% for job in jobs %}
+    <h3>{{ job.title }}</h3>
+    <p>{{ job.company.name }}</p>
+    <p>{{ job.location }}</p>
+
+    <p>
+      <a
+        href="{{ job.apply_url }}"
+        target="_blank"
+        style="
+          text-decoration: none;
+          color: white;
+          background-color: blue;
+          padding: 5px 10px;
+          border-radius: 5px;
+        "
+      >
+        Apply Now
+      </a>
+    </p>
+    <p>{{ job.job_type }}</p>
+    {% empty %}
+    <p>No jobs found</p>
+    {% endfor %}
+  </body>
+</html>

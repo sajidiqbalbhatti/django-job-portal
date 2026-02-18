@@ -1,0 +1,21 @@
+{% load static %}
+<!doctype html>
+<html>
+  <head>
+    <title>Bulk Upload Jobs</title>
+  </head>
+  <body>
+    <h2>Bulk Upload Jobs (CSV)</h2>
+
+    {% if messages %} {% for message in messages %}
+    <p>{{ message }}</p>
+    {% endfor %} {% endif %}
+
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <label>Select CSV File:</label>
+      <input type="file" name="csv_file" accept=".csv" required />
+      <button type="submit">Upload Jobs</button>
+    </form>
+  </body>
+</html>

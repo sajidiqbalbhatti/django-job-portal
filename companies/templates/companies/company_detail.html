@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>{{ company.name }}</h1>
+
+    <p>{{ company.description }}</p>
+    <p>{{ company.country }}</p>
+
+    {% if company.website %}
+    <a href="{{ company.website }}" target="_blank"> Visit Website </a>
+    {% endif %}
+
+    <hr />
+
+    <h2>Open Jobs</h2>
+
+    {% for job in jobs %}
+    <p>
+      {{ job.title }} 👉 <a href="{{ job.apply_url }}" target="_blank">Apply</a>
+    </p>
+    {% empty %}
+    <p>No jobs available.</p>
+    {% endfor %}
+  </body>
+</html>

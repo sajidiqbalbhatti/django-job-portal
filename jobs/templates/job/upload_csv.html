@@ -1,0 +1,14 @@
+{% extends "core/base.html" %} {% block job_upload %}
+<div class="container mx-auto p-6">
+  <h2 class="text-2xl font-bold mb-4">Upload Jobs CSV</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %} {{ form.as_p }}
+    <button
+      type="submit"
+      class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+    >
+      Upload & Import
+    </button>
+  </form>
+</div>
+{% endblock %}
