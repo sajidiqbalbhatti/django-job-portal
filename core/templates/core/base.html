@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>{% block title %}FindFitJobs{% endblock %}</title>
+    <title>{% block title %}TalentBridge{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     <link
       rel="stylesheet"
@@ -13,12 +13,30 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
     />
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap 5 JS Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   </head>
   <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <nav
+      class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm fixed-top"
+    >
       <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'core:home' %}">FindFitJobs</a>
+        <!-- Brand -->
+        <a
+          class="navbar-brand fw-bold text-primary"
+          href="{% url 'core:home' %}"
+        >
+          TalentBridge
+        </a>
+
+        <!-- Toggle button for mobile -->
         <button
           class="navbar-toggler"
           type="button"
@@ -31,23 +49,45 @@
           <span class="navbar-toggler-icon"></span>
         </button>
 
+        <!-- Navbar links -->
         <div class="collapse navbar-collapse" id="navbarContent">
           <!-- Left Side -->
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0 me-4">
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'core:home' %}">Home</a>
+              <a class="nav-link text-white active" href="{% url 'core:home' %}"
+                >Home</a
+              >
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'core:about' %}">About</a>
+              <a class="nav-link text-white" href="{% url 'core:about' %}"
+                >About</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="{% url 'core:about' %}"
+                >Contact</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="{% url 'core:privacy' %}"
+                >Privacy& Policy</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="{% url 'jobs:job_search' %}"
+                >Jobs</a
+              >
             </li>
 
             <!-- Jobs Dropdown -->
+            {% comment %}
             <li class="nav-item dropdown">
               <a
-                class="nav-link dropdown-toggle"
+                class="nav-link dropdown-toggle text-white"
                 href="#"
                 role="button"
                 data-bs-toggle="dropdown"
+                aria-expanded="false"
               >
                 Jobs
               </a>
@@ -64,54 +104,46 @@
                 {% endfor %}
               </ul>
             </li>
+            {% endcomment %}
           </ul>
 
-          <!-- Search Form -->
-          <form
-            class="d-flex"
-            method="get"
-            action="{% url 'jobs:job_search' %}"
-          >
-            <input
-              class="form-control me-2"
-              type="search"
-              name="q"
-              placeholder="Job title or keyword"
-              value="{{ request.GET.q }}"
-            />
-            <input
-              class="form-control me-2"
-              type="search"
-              name="location"
-              placeholder="City or Country"
-              value="{{ request.GET.location }}"
-            />
-            <button class="btn btn-outline-success" type="submit">
-              Search
-            </button>
-          </form>
-
           <!-- Right Side (Login/Logout) -->
-          <ul class="navbar-nav ms-3">
+          {% comment %}
+          <ul class="navbar-nav ms-auto">
             {% if user.is_authenticated %}
             <li class="nav-item">
-              <a class="nav-link" href="">Logout</a>
+              <a class="nav-link text-dark" href="{% url 'users:logout' %}"
+                >Logout</a
+              >
             </li>
             {% else %}
             <li class="nav-item">
-              <a class="nav-link" href="">Login</a>
+              <a class="nav-link text-dark" href="{% url 'users:login' %}"
+                >Login</a
+              >
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="">Sign Up</a>
+              <a class="nav-link text-dark" href="{% url 'users:signup' %}"
+                >Sign Up</a
+              >
             </li>
             {% endif %}
           </ul>
+          {% endcomment %}
         </div>
       </div>
     </nav>
 
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
     <!-- Top Bar -->
     {% block topbar %}{% endblock %}
+    <!--content-->
+    {% block content %}{% endblock %}
+
+    <!--About-->
+    {% block about %}{% endblock %}
 
     <!-- Hero Section -->
     {% block hero %} {% endblock %}

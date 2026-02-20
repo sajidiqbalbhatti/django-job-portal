@@ -53,3 +53,6 @@ def job_search(request):
 
 class AboutPage(TemplateView):
     template_name = 'core/About.html'
+
+class PrivacyPolicy(TemplateView):
+    template_name ="core/privacy_policy.html"

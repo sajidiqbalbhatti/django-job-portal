@@ -207,21 +207,35 @@ def job_search(request):
 # ===============================
 # CSV Upload (Form Based)
 # ===============================
+from django.contrib import messages
+
 def upload_jobs_csv(request):
     if request.method == 'POST':
         form = JobCSVImportForm(request.POST, request.FILES)
         if form.is_valid():
             obj = form.save()
             try:
-                process_csv(obj.file)
+                result = process_csv(obj.file)
+
                 obj.status = 'Completed'
                 obj.save()
-                messages.success(request, "CSV processed successfully!")
+
+                # Professional message
+                msg = (
+                    f"✅ {result['added']} jobs imported successfully. "
+                    f"⚠️ {result['skipped']} duplicates skipped. "
+                    f"❌ {result['errors']} errors."
+                )
+                messages.success(request, msg)
+
             except Exception as e:
                 obj.status = 'Failed'
                 obj.save()
-                messages.error(request, f"CSV Error: {e}")
-            return redirect('jobs:job_list')
+                messages.error(request, f"Import failed: {e}")
+
+            return redirect('jobs:upload_jobs_csv')
     else:
         form = JobCSVImportForm()
+
     return render(request, 'job/upload_csv.html', {'form': form})
+

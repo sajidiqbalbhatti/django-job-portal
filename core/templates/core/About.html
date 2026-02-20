@@ -1,0 +1,136 @@
+{% extends "core/base.html" %} {% block content %}
+
+<!-- Hero Section -->
+<section class="bg-primary text-white text-center py-5 mb-5">
+  <div class="container">
+    <h1 class="display-4 fw-bold">About TalentBridge</h1>
+    <p class="lead">
+      Connecting professionals with the right opportunities. Your career, our
+      mission.
+    </p>
+  </div>
+</section>
+
+<!-- Mission & Vision Section -->
+<section class="py-5">
+  <div
+    class="container d-flex flex-column flex-md-row align-items-center justify-content-between gap-4"
+  >
+    <!-- Mission -->
+    <div class="flex-fill">
+      <h2 class="fw-bold text-primary mb-3">Our Mission</h2>
+      <p class="text-secondary">
+        Empowering professionals by providing a reliable platform to find the
+        right career opportunities, connect with top employers, and grow skills
+        efficiently and transparently.
+      </p>
+    </div>
+    <div class="flex-fill text-center">
+      <div
+        class="p-5 bg-light rounded shadow d-inline-flex align-items-center justify-content-center"
+      >
+        <span class="display-4 text-primary">🚀</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-5 bg-light">
+  <div
+    class="container d-flex flex-column flex-md-row-reverse align-items-center justify-content-between gap-4"
+  >
+    <!-- Vision -->
+    <div class="flex-fill">
+      <h2 class="fw-bold text-primary mb-3">Our Vision</h2>
+      <p class="text-secondary">
+        To be the most trusted job platform globally where talent meets
+        opportunity. We envision a future where every professional achieves
+        their career goals with confidence.
+      </p>
+    </div>
+    <div class="flex-fill text-center">
+      <div
+        class="p-5 bg-white rounded shadow d-inline-flex align-items-center justify-content-center"
+      >
+        <span class="display-4 text-primary">🌐</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Core Values Section -->
+<section class="py-5">
+  <div class="container">
+    <h2 class="fw-bold text-primary mb-4 text-center">Our Core Values</h2>
+    <div class="d-flex flex-wrap justify-content-center gap-4">
+      <!-- Card 1 -->
+      <div
+        class="card core-value-card text-center p-4 shadow-sm"
+        style="width: 18rem"
+      >
+        <div class="mb-3">
+          <span class="display-4 text-primary">💡</span>
+        </div>
+        <h5 class="fw-bold mb-2">Integrity</h5>
+        <p class="text-secondary">
+          Honesty and transparency in everything we do.
+        </p>
+      </div>
+
+      <!-- Card 2 -->
+      <div
+        class="card core-value-card text-center p-4 shadow-sm"
+        style="width: 18rem"
+      >
+        <div class="mb-3">
+          <span class="display-4 text-primary">🚀</span>
+        </div>
+        <h5 class="fw-bold mb-2">Innovation</h5>
+        <p class="text-secondary">
+          Continuously improving to deliver better solutions.
+        </p>
+      </div>
+
+      <!-- Card 3 -->
+      <div
+        class="card core-value-card text-center p-4 shadow-sm"
+        style="width: 18rem"
+      >
+        <div class="mb-3">
+          <span class="display-4 text-primary">🏆</span>
+        </div>
+        <h5 class="fw-bold mb-2">Excellence</h5>
+        <p class="text-secondary">
+          Striving for the highest standards in all services.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Join Us Section -->
+<section class="py-5 bg-primary text-white text-center">
+  <div class="container">
+    <h2 class="fw-bold mb-3">Join Us in Our Mission</h2>
+    <p class="lead mb-0">
+      Whether you are a job seeker, employer, or partner, XYZ is here to help
+      you succeed.
+    </p>
+  </div>
+</section>
+
+<!-- Hover Effect CSS -->
+<style>
+  .core-value-card {
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+    cursor: pointer;
+  }
+  .core-value-card:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.25);
+  }
+</style>
+
+{% endblock %}

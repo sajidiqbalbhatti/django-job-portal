@@ -16,7 +16,12 @@
       >
         Explore Jobs
       </a>
-      <a href="#" class="btn btn-outline-dark btn-lg px-4"> Post a Job </a>
+      <a
+        href="{% url 'jobs:upload_jobs_csv' %}"
+        class="btn btn-outline-dark btn-lg px-4"
+      >
+        Post a Job
+      </a>
     </div>
   </div>
 </section>
@@ -395,7 +400,7 @@
     <div class="footer-grid">
       <!-- Company Info -->
       <div class="footer-col">
-        <h3 class="footer-logo">FindFit Jobs</h3>
+        <h3 class="footer-logo">TalentBridge</h3>
         <p>
           Your trusted platform to find the best jobs worldwide. Connecting
           talent with opportunity.
@@ -428,7 +433,7 @@
       <div class="footer-col">
         <h4>Contact</h4>
         <ul>
-          <li>Email: support@findfit.com</li>
+          <li>Email: support@TalentBridge.com</li>
           <li>Phone: +1 234 567 890</li>
           <li>Location: New York, USA</li>
         </ul>
@@ -436,7 +441,7 @@
     </div>
 
     <div class="footer-bottom">
-      <p>© 2026 FindFit Jobs. All Rights Reserved.</p>
+      <p>© 2026 TalentBridge. All Rights Reserved.</p>
     </div>
   </div>
 </footer>

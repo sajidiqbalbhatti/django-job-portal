@@ -1,98 +1,125 @@
+import xml.etree.ElementTree as ET
 from django.utils.text import slugify
 from jobs.models import Country, Category, Job, Company, JobType
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
-
 def process_csv(file, default_user_username='admin'):
-    import csv
-
     # Default user
     try:
         default_user = User.objects.get(username=default_user_username)
     except User.DoesNotExist:
         default_user = User.objects.first()
 
-    # Read CSV
-    decoded = file.read().decode('utf-8').splitlines()
-    reader = csv.DictReader(decoded)
+    tree = ET.parse(file)
+    root = tree.getroot()
 
-    # CSV header mapping
-    header_map = {
-        'title': ['title', 'job title', 'job_title'],
-        'company': ['company', 'company name', 'employer'],
-        'category': ['category', 'job category'],
-        'country': ['country', 'country name'],
-        'description': ['description', 'job description'],
-        'requirements': ['requirements', 'skills'],
-        'location': ['location', 'job location'],
-        'job_type': ['job_type', 'type', 'employment_type'],
-        'salary_min': ['salary_min', 'min salary'],
-        'salary_max': ['salary_max', 'max salary'],
-        'apply_url': ['apply_url', 'url']
-    }
+    # Cache for faster DB access
+    country_cache = {c.name: c for c in Country.objects.all()}
+    category_cache = {c.name: c for c in Category.objects.all()}
+    company_cache = {c.name: c for c in Company.objects.all()}
+    jobtype_cache = {jt.slug: jt for jt in JobType.objects.all()}
 
-    def get_value(row, key):
-        """Get value from row with multiple header aliases"""
-        for alias in header_map.get(key, []):
-            if alias in row:
-                return (row.get(alias) or '').strip()
-        return ''
+    existing_slugs = set(Job.objects.values_list('slug', flat=True))
 
-    job_count = 0
+    jobs_to_create = []
+    added = 0
+    skipped = 0
+    errors = 0
 
-    for row_num, raw_row in enumerate(reader, start=1):
-        row = {k.strip().lower(): (v or '').strip() for k, v in raw_row.items()}
+    for job_elem in root.findall('job'):
+        try:
+            title = job_elem.findtext('title')
+            company_name = job_elem.findtext('company')
+            category_name = job_elem.findtext('category')
+            country_name = job_elem.findtext('country')
+            description = job_elem.findtext('description') or ""
+            requirements = job_elem.findtext('requirements') or ""
+            location = job_elem.findtext('location') or ""
+            job_type_name = job_elem.findtext('job_type') or 'Full Time'
+            salary_min = job_elem.findtext('salary_min')
+            salary_max = job_elem.findtext('salary_max')
+            apply_url = job_elem.findtext('apply_url') or ""
 
-        title = get_value(row, 'title')
-        company_name = get_value(row, 'company')
-        category_name = get_value(row, 'category')
-        country_name = get_value(row, 'country')
+            # Skip incomplete rows
+            if not all([title, company_name, category_name, country_name]):
+                skipped += 1
+                continue
 
-        # Skip incomplete rows
-        if not all([title, company_name, category_name, country_name]):
-            print(f"⚠️ Skipping row {row_num}: Missing required fields -> {row}")
-            continue
+            # Country
+            country = country_cache.get(country_name)
+            if not country:
+                country = Country.objects.create(
+                    name=country_name,
+                    slug=slugify(country_name),
+                    code=country_name[:2].upper()
+                )
+                country_cache[country_name] = country
 
-        # ForeignKeys
-        country, _ = Country.objects.get_or_create(
-            name=country_name,
-            defaults={'slug': slugify(country_name), 'code': country_name[:2].upper()}
-        )
-        category, _ = Category.objects.get_or_create(
-            name=category_name,
-            defaults={'slug': slugify(category_name)}
-        )
-        company, _ = Company.objects.get_or_create(
-            name=company_name,
-            defaults={'slug': slugify(company_name), 'country': country}
-        )
+            # Category
+            category = category_cache.get(category_name)
+            if not category:
+                category = Category.objects.create(
+                    name=category_name,
+                    slug=slugify(category_name)
+                )
+                category_cache[category_name] = category
 
-        # JobType - safe slug without random -1 suffix
-        job_type_name = get_value(row, 'job_type') or 'Full Time'
-        slug = slugify(job_type_name)
-        job_type_obj = JobType.objects.filter(slug=slug).first()
-        if not job_type_obj:
-            job_type_obj = JobType.objects.create(name=job_type_name, slug=slug)
+            # Company
+            company = company_cache.get(company_name)
+            if not company:
+                company = Company.objects.create(
+                    name=company_name,
+                    slug=slugify(company_name),
+                    country=country
+                )
+                company_cache[company_name] = company
 
-        # Create Job
-        Job.objects.create(
-            title=title,
-            company=company,
-            category=category,
-            country=country,
-            description=get_value(row, 'description'),
-            requirements=get_value(row, 'requirements'),
-            location=get_value(row, 'location'),
-            job_type=job_type_obj,
-            salary_min=get_value(row, 'salary_min') or None,
-            salary_max=get_value(row, 'salary_max') or None,
-            apply_url=get_value(row, 'apply_url'),
-            is_active=True
-        )
+            # JobType
+            normalized = job_type_name.lower().replace('-', ' ').replace('_', ' ').strip()
+            job_type_name = " ".join(word.capitalize() for word in normalized.split())
+            job_type_slug = slugify(job_type_name)
 
-        print(f"✅ Job Created: {title} at {company_name}")
-        job_count += 1
+            job_type_obj = jobtype_cache.get(job_type_slug)
+            if not job_type_obj:
+                job_type_obj = JobType.objects.create(name=job_type_name, slug=job_type_slug)
+                jobtype_cache[job_type_slug] = job_type_obj
 
-    print(f"\n🎉 CSV Import Complete: {job_count} jobs added.")
+            # Unique slug
+            job_slug = slugify(f"{title}-{company_name}-{country_name}")
+
+            # Skip duplicates
+            if job_slug in existing_slugs:
+                skipped += 1
+                continue
+
+            existing_slugs.add(job_slug)
+
+            job = Job(
+                title=title,
+                company=company,
+                category=category,
+                country=country,
+                description=description,
+                requirements=requirements,
+                location=location,
+                job_type=job_type_obj,
+                salary_min=salary_min or None,
+                salary_max=salary_max or None,
+                apply_url=apply_url,
+                slug=job_slug,
+                is_active=True
+            )
+
+            jobs_to_create.append(job)
+            added += 1
+
+        except Exception as e:
+            errors += 1
+            print(f"⚠️ Error processing job: {e}")
+
+    Job.objects.bulk_create(jobs_to_create, batch_size=500)
+
+    # Return professional stats
+    return {"added": added, "skipped": skipped, "errors": errors}
