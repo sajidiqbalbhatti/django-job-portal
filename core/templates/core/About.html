@@ -3,8 +3,8 @@
 <!-- Hero Section -->
 <section class="bg-primary text-white text-center py-5 mb-5">
   <div class="container">
-    <h1 class="display-4 fw-bold">About TalentBridge</h1>
-    <p class="lead">
+    <h1 class="display-4 fw-bold mb-3">About TalentBridge</h1>
+    <p class="lead mx-auto" style="max-width: 700px">
       Connecting professionals with the right opportunities. Your career, our
       mission.
     </p>
@@ -27,7 +27,7 @@
     </div>
     <div class="flex-fill text-center">
       <div
-        class="p-5 bg-light rounded shadow d-inline-flex align-items-center justify-content-center"
+        class="icon-box p-5 bg-light rounded shadow d-inline-flex align-items-center justify-content-center"
       >
         <span class="display-4 text-primary">🚀</span>
       </div>
@@ -50,7 +50,7 @@
     </div>
     <div class="flex-fill text-center">
       <div
-        class="p-5 bg-white rounded shadow d-inline-flex align-items-center justify-content-center"
+        class="icon-box p-5 bg-white rounded shadow d-inline-flex align-items-center justify-content-center"
       >
         <span class="display-4 text-primary">🌐</span>
       </div>
@@ -68,7 +68,9 @@
         class="card core-value-card text-center p-4 shadow-sm"
         style="width: 18rem"
       >
-        <div class="mb-3">
+        <div
+          class="mb-3 icon-circle bg-primary-light d-inline-flex align-items-center justify-content-center"
+        >
           <span class="display-4 text-primary">💡</span>
         </div>
         <h5 class="fw-bold mb-2">Integrity</h5>
@@ -82,7 +84,9 @@
         class="card core-value-card text-center p-4 shadow-sm"
         style="width: 18rem"
       >
-        <div class="mb-3">
+        <div
+          class="mb-3 icon-circle bg-primary-light d-inline-flex align-items-center justify-content-center"
+        >
           <span class="display-4 text-primary">🚀</span>
         </div>
         <h5 class="fw-bold mb-2">Innovation</h5>
@@ -96,7 +100,9 @@
         class="card core-value-card text-center p-4 shadow-sm"
         style="width: 18rem"
       >
-        <div class="mb-3">
+        <div
+          class="mb-3 icon-circle bg-primary-light d-inline-flex align-items-center justify-content-center"
+        >
           <span class="display-4 text-primary">🏆</span>
         </div>
         <h5 class="fw-bold mb-2">Excellence</h5>
@@ -113,24 +119,15 @@
   <div class="container">
     <h2 class="fw-bold mb-3">Join Us in Our Mission</h2>
     <p class="lead mb-0">
-      Whether you are a job seeker, employer, or partner, XYZ is here to help
-      you succeed.
+      Whether you are a job seeker, employer, or partner, TalentBridge is here
+      to help you succeed.
     </p>
+    <a href="{% url 'jobs:job_search' %}" class="btn btn-light btn-lg mt-4"
+      >Explore Jobs</a
+    >
   </div>
 </section>
 
-<!-- Hover Effect CSS -->
-<style>
-  .core-value-card {
-    transition:
-      transform 0.3s ease,
-      box-shadow 0.3s ease;
-    cursor: pointer;
-  }
-  .core-value-card:hover {
-    transform: translateY(-10px) scale(1.05);
-    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.25);
-  }
-</style>
+<!-- Styles for hover effects and responsiveness -->
 
 {% endblock %}

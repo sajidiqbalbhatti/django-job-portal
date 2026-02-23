@@ -4,31 +4,28 @@
   <head>
     <meta charset="UTF-8" />
     <title>{% block title %}TalentBridge{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+    <!-- Bootstrap CSS -->
     <link
-      rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
     />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
     />
-    <!-- Bootstrap 5 CSS -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
 
-    <!-- Bootstrap 5 JS Bundle (includes Popper) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Site CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
   </head>
   <body>
     <!-- Navbar -->
     <nav
       class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm fixed-top"
     >
-      <div class="container-fluid">
-        <!-- Brand -->
+      <div class="container">
         <a
           class="navbar-brand fw-bold text-primary"
           href="{% url 'core:home' %}"
@@ -36,9 +33,9 @@
           TalentBridge
         </a>
 
-        <!-- Toggle button for mobile -->
+        <!-- Mobile Toggle -->
         <button
-          class="navbar-toggler"
+          class="navbar-toggler border-0"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarContent"
@@ -49,81 +46,54 @@
           <span class="navbar-toggler-icon"></span>
         </button>
 
-        <!-- Navbar links -->
+        <!-- Navbar Content -->
         <div class="collapse navbar-collapse" id="navbarContent">
-          <!-- Left Side -->
-          <ul class="navbar-nav ms-auto mb-2 mb-lg-0 me-4">
+          <ul class="navbar-nav ms-auto text-center text-lg-start">
             <li class="nav-item">
-              <a class="nav-link text-white active" href="{% url 'core:home' %}"
-                >Home</a
-              >
+              <a class="nav-link px-lg-3" href="{% url 'core:home' %}">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link text-white" href="{% url 'core:about' %}"
+              <a class="nav-link px-lg-3" href="{% url 'core:about' %}"
                 >About</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link text-white" href="{% url 'core:about' %}"
-                >Contact</a
+              <a class="nav-link px-lg-3" href="#">Contact</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link px-lg-3" href="{% url 'core:privacy' %}"
+                >Privacy Policy</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link text-white" href="{% url 'core:privacy' %}"
-                >Privacy& Policy</a
-              >
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-white" href="{% url 'jobs:job_search' %}"
+              <a class="nav-link px-lg-3" href="{% url 'jobs:job_search' %}"
                 >Jobs</a
               >
             </li>
-
-            <!-- Jobs Dropdown -->
-            {% comment %}
-            <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle text-white"
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                Jobs
-              </a>
-              <ul class="dropdown-menu">
-                {% for cat in category %}
-                <li>
-                  <a
-                    class="dropdown-item"
-                    href="{% url 'jobs:job_search' %}?category={{ cat.slug }}"
-                  >
-                    {{ cat.name }}
-                  </a>
-                </li>
-                {% endfor %}
-              </ul>
-            </li>
-            {% endcomment %}
           </ul>
 
-          <!-- Right Side (Login/Logout) -->
           {% comment %}
-          <ul class="navbar-nav ms-auto">
+          <ul class="navbar-nav ms-lg-3 text-center">
             {% if user.is_authenticated %}
             <li class="nav-item">
-              <a class="nav-link text-dark" href="{% url 'users:logout' %}"
+              <a
+                class="btn btn-outline-light btn-sm mt-2 mt-lg-0"
+                href="{% url 'users:logout' %}"
                 >Logout</a
               >
             </li>
             {% else %}
-            <li class="nav-item">
-              <a class="nav-link text-dark" href="{% url 'users:login' %}"
+            <li class="nav-item me-lg-2">
+              <a
+                class="btn btn-outline-light btn-sm mt-2 mt-lg-0"
+                href="{% url 'users:login' %}"
                 >Login</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link text-dark" href="{% url 'users:signup' %}"
+              <a
+                class="btn btn-primary btn-sm mt-2 mt-lg-0"
+                href="{% url 'users:signup' %}"
                 >Sign Up</a
               >
             </li>
@@ -134,46 +104,37 @@
       </div>
     </nav>
 
-    <!-- Bootstrap 5 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Top Bar -->
-    {% block topbar %}{% endblock %}
-    <!--content-->
+    <!-- Blocks -->
+    {% block topbar %}{% endblock %}<!--content-->
     {% block content %}{% endblock %}
-
-    <!--About-->
-    {% block about %}{% endblock %}
-
-    <!-- Hero Section -->
-    {% block hero %} {% endblock %}
-    <!-- stats bar section -->
+    <!--about-->{% block about %}{% endblock %}<!--hero-->
+    {% block hero %}{% endblock %}
+    <!--stats-->
     {% block stats_section %}{% endblock %}
-    <!-- how_it_works -->
+    <!--works-->
     {% block how_it_works %}{% endblock %}
-
-    <!--- job_categories -->
-
+    <!--categories-->
     {% block job_categories %}{% endblock %}
-
-    <!-- Sidebar (Optional) -->
-    {% block sidebar %}{% endblock %}
+    <!--sidebar-->
+    {% block sidebar%}{% endblock %}
     <!--search-->
     {% block search %}{% endblock %}
-    <!-- job-list -->
+    <!--job_list-->
     {% block job_list %}{% endblock %}
-    <!-- job_detail-->
+    <!--job detail-->
+
     {% block job_detail %}{% endblock %}
-    <!-- jobupload-->
+    <!--job upload-->
     {% block job_upload %}{% endblock %}
-    <!-- Call To Action -->
-    {% block cta %}{% endblock %}
+    <!--footer-->
+    {% block footer %}{% endblock %}
 
-    <!-- Footer -->
-    {% block footer %} {% endblock %}
+    <!-- Scripts -->
+    <!-- Only include Bootstrap JS once -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- JS -->
-    <script src="{% static 'js/script.js' %}"></script>
+    <!-- External JS -->
+    <script src="{% static 'js/main.js' %}"></script>
 
     {% block extra_js %}{% endblock %}
   </body>
