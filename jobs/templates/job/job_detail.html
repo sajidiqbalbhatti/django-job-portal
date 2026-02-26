@@ -2,44 +2,69 @@
 
 <div class="container py-5">
   <div class="row g-4">
-    <!-- LEFT: Job Details -->
+    <!-- LEFT SIDE -->
     <div class="col-lg-8">
       <div class="card border-0 shadow-lg rounded-4">
         <div class="card-body p-4 p-md-5">
           <!-- Title -->
-          <h2 class="fw-bold mb-2">{{ job.title }}</h2>
+          <h2 class="fw-bold mb-4">{{ job.title }}</h2>
 
-          <!-- Company + Location -->
-          <div
-            class="d-flex flex-wrap align-items-center gap-3 mb-3 text-muted"
-          >
-            <span>🏢 <strong>{{ job.company.name }}</strong></span>
-            <span>📍 {{ job.location }}</span>
-            <span>🗓 {{ job.created_at|date:"d M Y" }}</span>
-          </div>
+          <!-- Meta Information -->
+          <div class="mb-4 small">
+            <div class="mb-2">
+              <span class="fw-semibold text-dark">Company:</span>
+              <span class="text-secondary">{{ job.company.name }}</span>
+            </div>
 
-          <!-- Tags -->
-          <div class="mb-4">
-            {% if job.job_type == "FT" %}
-            <span
-              class="badge bg-success-subtle text-success fw-semibold px-3 py-2"
-              >Full Time</span
-            >
-            {% elif job.job_type == "PT" %}
-            <span
-              class="badge bg-warning-subtle text-warning fw-semibold px-3 py-2"
-              >Part Time</span
-            >
-            {% else %}
-            <span class="badge bg-info-subtle text-info fw-semibold px-3 py-2"
-              >Internship</span
-            >
-            {% endif %} {% if job.salary %}
-            <span
-              class="badge bg-primary-subtle text-primary fw-semibold px-3 py-2 ms-2"
-            >
-              💰 {{ job.salary }}
-            </span>
+            <div class="mb-2">
+              <span class="fw-semibold text-dark">Location:</span>
+              <span class="text-secondary">{{ job.location }}</span>
+            </div>
+
+            <div class="mb-2">
+              <span class="fw-semibold text-dark">Posted:</span>
+              <span class="text-secondary">
+                {{ job.created_at|date:"d M Y" }}
+              </span>
+            </div>
+
+            <!-- Job Type -->
+            <div class="mb-2">
+              <span class="fw-semibold text-dark">Job Type:</span>
+              {% if job.job_type == "FT" %}
+              <span class="badge bg-success-subtle text-success"
+                >Full Time</span
+              >
+              {% elif job.job_type == "PT" %}
+              <span class="badge bg-warning-subtle text-warning"
+                >Part Time</span
+              >
+              {% else %}
+              <span class="badge bg-info-subtle text-info">Internship</span>
+              {% endif %}
+            </div>
+
+            <!-- Salary Range -->
+            {% if job.salary_min or job.salary_max %}
+            <div class="mb-2">
+              <span class="fw-semibold text-dark">Salary:</span>
+
+              {% if job.salary_min and job.salary_max %}
+              <span class="text-success fw-semibold">
+                💰 {{ job.salary_min }} - {{ job.salary_max }}
+              </span>
+
+              {% elif job.salary_min %}
+              <span class="text-success fw-semibold">
+                💰 From {{ job.salary_min }}
+              </span>
+
+              {% elif job.salary_max %}
+              <span class="text-success fw-semibold">
+                💰 Up to {{ job.salary_max }}
+              </span>
+              {% endif %}
+            </div>
             {% endif %}
           </div>
 
@@ -64,18 +89,29 @@
       </div>
     </div>
 
-    <!-- RIGHT: Sidebar -->
+    <!-- RIGHT SIDEBAR -->
     <div class="col-lg-4">
       <div
         class="card border-0 shadow-sm rounded-4 position-sticky"
         style="top: 100px"
       >
-        <div class="card-body p-4">
+        <div class="card-body p-4 text-center">
           <!-- Salary Highlight -->
-          {% if job.salary %}
-          <div class="text-center mb-4">
-            <div class="text-muted small">Salary</div>
-            <h4 class="fw-bold text-success">💰 {{ job.salary }}</h4>
+          {% if job.salary_min or job.salary_max %}
+          <div class="mb-4">
+            <div class="text-muted small">Salary Range</div>
+
+            {% if job.salary_min and job.salary_max %}
+            <h4 class="fw-bold text-success">
+              💰 {{ job.salary_min }} - {{ job.salary_max }}
+            </h4>
+
+            {% elif job.salary_min %}
+            <h4 class="fw-bold text-success">💰 From {{ job.salary_min }}</h4>
+
+            {% elif job.salary_max %}
+            <h4 class="fw-bold text-success">💰 Up to {{ job.salary_max }}</h4>
+            {% endif %}
           </div>
           {% endif %}
 
@@ -88,8 +124,8 @@
             🚀 Apply Now
           </a>
 
-          <!-- Company Info -->
-          <div class="border-top pt-3 mt-3 text-center">
+          <!-- Company -->
+          <div class="border-top pt-3 mt-3">
             <div class="text-muted small">Company</div>
             <strong>{{ job.company.name }}</strong>
           </div>

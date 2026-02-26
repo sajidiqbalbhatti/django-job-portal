@@ -2,11 +2,11 @@
    GLOBAL STYLES
 ---------------------------- */
 body {
-  padding-top: 70px;
+  padding-top: 60px;
 }
 
 #jobs-section {
-  margin-top: 2rem;
+  margin-top: 0rem;
 }
 
 .container {
@@ -18,61 +18,129 @@ body {
 /* ----------------------------
    HERO SECTION
 ---------------------------- */
+/* ================= HERO FIXED ================= */
+
+/* MOBILE FIRST — small screens like 360x740 */
+/* =========================
+   HERO SECTION
+========================= */
+/* =========================
+   HERO SECTION
+========================= */
 .hero-section {
-  height: 50vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   background: #f8f9fa;
-  padding: 30px 0;
+  text-align: center;
+  padding: 80px 16px 70px;  /* slightly bigger padding for premium look */
+  margin-bottom: 0;
 }
 
+/* =========================
+   HERO TITLE
+========================= */
 .hero-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #111;
+  font-weight: 900;
+  line-height: 1.1;
   letter-spacing: -0.5px;
-  margin-bottom: 15px;
+  font-size: 2rem; /* base size mobile */
+  color: #111;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  margin-bottom: 0px;
 }
 
+/* Split lines for advanced styling */
+.hero-title-line1 {
+  font-size: 2rem;
+  color: #111;
+}
+
+.hero-title-line2 {
+  font-size: 2.2rem;
+  font-weight: 900;
+  background: linear-gradient(90deg, #0d3b66, #1e6091);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* =========================
+   HERO DESCRIPTION
+========================= */
 .hero-description {
   font-size: 1rem;
-  color: #555;
-  max-width: 750px;
-  margin: 0 auto 25px;
-  line-height: 1.7;
-  text-align: center;
-  transition: font-size 0.3s ease;
+  max-width: 650px;
+  margin: 0 auto 28px;
+  line-height: 1.6;
 }
 
+/* =========================
+   HERO BUTTONS
+========================= */
 .hero-buttons {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-  justify-content: center;
+  flex-direction: column;       /* stacked on mobile */
   align-items: center;
+  justify-content: center;
+  gap: 14px;
 }
 
 .hero-buttons .btn {
-  border-radius: 40px;
-  font-weight: 500;
-  padding: 0.7rem 1.8rem;
-  transition: all 0.3s ease;
+  width: 100%;
+  max-width: 280px;
+  font-size: 1.1rem;           /* slightly bigger for touch */
+  padding: 0.8rem 1.6rem;
+  text-align: center;
 }
 
-.hero-buttons .btn-dark:hover {
-  background-color: #000;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+/* =========================
+   RESPONSIVE SIZING
+========================= */
+
+/* Small tablets ≥576px */
+@media (min-width: 576px) {
+  .hero-title-line1 {
+    font-size: 2.4rem;
+  }
+  .hero-title-line2 {
+    font-size: 2.6rem;
+  }
+  .hero-buttons {
+    flex-direction: row;         /* horizontal buttons */
+    justify-content: center;
+  }
+  .hero-buttons .btn {
+    width: auto;
+  }
 }
 
-.hero-buttons .btn-outline-dark:hover {
-  background-color: #111;
-  color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+/* Tablets ≥768px */
+@media (min-width: 768px) {
+  .hero-title-line1 {
+    font-size: 2.8rem;
+  }
+  .hero-title-line2 {
+    font-size: 3rem;
+  }
 }
 
+/* Laptops ≥992px */
+@media (min-width: 992px) {
+  .hero-title-line1 {
+    font-size: 3.2rem;
+  }
+  .hero-title-line2 {
+    font-size: 3.6rem;
+  }
+}
+
+/* Large Desktop ≥1200px */
+@media (min-width: 1200px) {
+  .hero-title-line1 {
+    font-size: 3.6rem;
+  }
+  .hero-title-line2 {
+    font-size: 4rem;
+  }
+}
 /* ----------------------------
    STATS SECTION
 ---------------------------- */
@@ -402,6 +470,12 @@ body {
 .privacy-list { list-style: none; padding: 0; }
 
 .privacy-list li { padding: 8px 0; border-bottom: 1px solid #eee; }
+
+@media (max-width: 768px) {
+  .stats-section {
+    margin-top: 600px;
+  }
+}
 
 /* ----------------------------
    FOOTER
