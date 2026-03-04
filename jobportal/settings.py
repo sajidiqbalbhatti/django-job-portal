@@ -15,7 +15,12 @@ SECRET_KEY = 'django-insecure-_d55@*%9+^7g6@ere5_!$ug2dm^=kkhqmosb(&m(b=be%_y1ro
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'bhatti.pythonanywhere.com']
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    'bhatti.pythonanywhere.com',
+    'django-job-portal-iifp.onrender.com',  # add this
+]
 
 
 # Application definition
