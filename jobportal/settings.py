@@ -7,16 +7,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-_d55@*%9+^7g6@ere5_!$ug2dm^=kkhqmosb(&m(b=be%_y1ro')
-DEBUG = False  # Production ke liye False
 
+# Production settings
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+
+# Common / minimal ALLOWED_HOSTS for production
 ALLOWED_HOSTS = [
-    "127.0.0.1",
-    "localhost",
-    "bhatti.pythonanywhere.com",
-    "django-job-portal-iifp.onrender.com",
-    "django-job-portal-dmxk.onrender.com",
     "careerlyjobs.com",
     "www.careerlyjobs.com",
+    "django-job-portal-dmxk.onrender.com",
 ]
 
 # Applications
@@ -73,7 +72,11 @@ AUTH_USER_MODEL = 'users.User'
 
 # Database (Render PostgreSQL)
 DATABASES = {
-    'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
+    'default': dj_database_url.parse(
+        os.environ.get("DATABASE_URL"),
+        conn_max_age=600,
+        ssl_require=True
+    )
 }
 
 # Password validation
@@ -87,24 +90,18 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
 USE_TZ = True
 
 # Static files
 STATIC_URL = '/static/'
-
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
-]
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
+STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Media files
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Security settings for production
 SECURE_SSL_REDIRECT = True
