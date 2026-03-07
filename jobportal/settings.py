@@ -15,10 +15,10 @@ SECRET_KEY = os.environ.get(
     'django-insecure-_d55@*%9+^7g6@ere5_!$ug2dm^=kkhqmosb(&m(b=be%_y1ro'
 )
 
-# Development/debug mode for Render
-DEBUG = True  # Temporary for debugging
+# Temporary debug mode for Render deployment
+DEBUG = True
 
-# Allow all hosts for debug
+# Allow all hosts during debug (custom domain included)
 ALLOWED_HOSTS = ["*"]
 
 # -----------------------------
@@ -97,7 +97,7 @@ DATABASES = {
     'default': dj_database_url.parse(
         DATABASE_URL,
         conn_max_age=600,
-        ssl_require=False  # Temporary for debug, change to True in production
+        ssl_require=False  # Temporary for debug; change to True in production
     )
 }
 
@@ -134,7 +134,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 # -----------------------------
-# Security settings (disabled for debug)
+# Security settings (temporary debug)
 # -----------------------------
 SECURE_SSL_REDIRECT = False
 SESSION_COOKIE_SECURE = False
@@ -152,7 +152,7 @@ X_FRAME_OPTIONS = 'DENY'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # -----------------------------
-# Logging (optional for error tracking)
+# Logging (for error tracking)
 # -----------------------------
 LOGGING = {
     'version': 1,
