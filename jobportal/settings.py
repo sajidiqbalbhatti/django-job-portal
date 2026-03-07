@@ -15,13 +15,11 @@ SECRET_KEY = os.environ.get(
     'django-insecure-_d55@*%9+^7g6@ere5_!$ug2dm^=kkhqmosb(&m(b=be%_y1ro'
 )
 
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+# Development/debug mode for Render
+DEBUG = True  # Temporary for debugging
 
-ALLOWED_HOSTS = [
-    "careerlyjobs.com",
-    "www.careerlyjobs.com",
-    "django-job-portal-dmxk.onrender.com",
-]
+# Allow all hosts for debug
+ALLOWED_HOSTS = ["*"]
 
 # -----------------------------
 # Applications
@@ -99,7 +97,7 @@ DATABASES = {
     'default': dj_database_url.parse(
         DATABASE_URL,
         conn_max_age=600,
-        ssl_require=True
+        ssl_require=False  # Temporary for debug, change to True in production
     )
 }
 
@@ -136,14 +134,14 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 # -----------------------------
-# Security settings for production
+# Security settings (disabled for debug)
 # -----------------------------
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_HSTS_SECONDS = 31536000
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
+SECURE_SSL_REDIRECT = False
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
+SECURE_HSTS_SECONDS = 0
+SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+SECURE_HSTS_PRELOAD = False
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
@@ -152,3 +150,25 @@ X_FRAME_OPTIONS = 'DENY'
 # Default primary key field
 # -----------------------------
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# -----------------------------
+# Logging (optional for error tracking)
+# -----------------------------
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'error.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+}
