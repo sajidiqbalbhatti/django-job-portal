@@ -16,7 +16,7 @@ SECRET_KEY = os.environ.get(
 )
 
 # Temporary debug mode for Render deployment
-DEBUG = False
+DEBUG = True
 
 # Allow all hosts during debug (custom domain included)
 ALLOWED_HOSTS = ["*"]
