@@ -1,16 +1,16 @@
 from django.contrib import admin
-from .models import Job, Category, Country,JobCSVImport,Company,JobType
+from .models import Job, Category, Country, JobCSVImport, Company, JobType
 
-
+# Register simple models
 admin.site.register(Category)
 admin.site.register(Country)
 admin.site.register(Company)
 admin.site.register(JobType)
-
 admin.site.register(JobCSVImport)
+
+# Job admin
 @admin.register(Job)
 class JobAdmin(admin.ModelAdmin):
-
     # Admin list columns
     list_display = (
         'title',
@@ -43,7 +43,7 @@ class JobAdmin(admin.ModelAdmin):
     # Pagination
     list_per_page = 20
 
-    # Readonly auto fields
+    # Readonly fields
     readonly_fields = ('created_at', 'updated_at')
 
     # Form sections
