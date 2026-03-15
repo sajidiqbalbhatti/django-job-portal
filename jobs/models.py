@@ -9,7 +9,7 @@ User = get_user_model()
 # Category
 # =========================
 class Category(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=150, unique=True)
     slug = models.SlugField(unique=True, blank=True)
 
     def save(self, *args, **kwargs):
@@ -25,7 +25,7 @@ class Category(models.Model):
 # Country
 # =========================
 class Country(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=150, unique=True)
     code = models.CharField(max_length=5, blank=True)  # FIXED
     slug = models.SlugField(unique=True, blank=True)
 
@@ -46,7 +46,7 @@ class Country(models.Model):
 # Job Type (Dynamic)
 # =========================
 class JobType(models.Model):
-    name = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=150, unique=True)
     slug = models.SlugField(unique=True, blank=True)
 
     def save(self, *args, **kwargs):
