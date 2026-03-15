@@ -26,16 +26,14 @@ class Category(models.Model):
 # =========================
 class Country(models.Model):
     name = models.CharField(max_length=150, unique=True)
-    code = models.CharField(max_length=5, blank=True)  # FIXED
+    code = models.CharField(max_length=5, blank=True)
     slug = models.SlugField(unique=True, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
-
         if not self.code:
             self.code = self.name[:2].upper()
-
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -46,7 +44,7 @@ class Country(models.Model):
 # Job Type (Dynamic)
 # =========================
 class JobType(models.Model):
-    name = models.CharField(max_length=150, unique=True)
+    name = models.CharField(max_length=150, unique=True)  # safe length
     slug = models.SlugField(unique=True, blank=True)
 
     def save(self, *args, **kwargs):
@@ -62,7 +60,7 @@ class JobType(models.Model):
 # Company
 # =========================
 class Company(models.Model):
-    name = models.CharField(max_length=200, unique=True)
+    name = models.CharField(max_length=255, unique=True)  # safe length
     slug = models.SlugField(unique=True, blank=True)
     country = models.ForeignKey(Country, on_delete=models.CASCADE, related_name="companies")
 
@@ -79,60 +77,21 @@ class Company(models.Model):
 # Job
 # =========================
 class Job(models.Model):
-    title = models.CharField(max_length=200)
-
-    company = models.ForeignKey(
-        Company,
-        on_delete=models.CASCADE,
-        related_name='jobs'
-    )
-
-    posted_by = models.ForeignKey(
-        User,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True
-    )
-
+    title = models.CharField(max_length=255)  # safe length
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='jobs')
+    posted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     description = models.TextField()
     requirements = models.TextField(blank=True)
-
-    location = models.CharField(max_length=150)
-
-    job_type = models.ForeignKey(
-        JobType,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="jobs"
-    )
-
-    category = models.ForeignKey(
-        Category,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="jobs"
-    )
-
-    country = models.ForeignKey(
-        Country,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="jobs"
-    )
-
+    location = models.CharField(max_length=200)  # safe length
+    job_type = models.ForeignKey(JobType, on_delete=models.SET_NULL, null=True, blank=True, related_name="jobs")
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, related_name="jobs")
+    country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True, blank=True, related_name="jobs")
     salary_min = models.IntegerField(null=True, blank=True)
     salary_max = models.IntegerField(null=True, blank=True)
-
     apply_url = models.URLField(help_text="External apply link")
-
     is_active = models.BooleanField(default=True)
-
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
     slug = models.SlugField(unique=True, blank=True, null=True)
 
     def save(self, *args, **kwargs):
@@ -151,15 +110,9 @@ class Job(models.Model):
 class JobCSVImport(models.Model):
     file = models.FileField(upload_to='job_csv/')
     uploaded_at = models.DateTimeField(auto_now_add=True)
-
-    status = models.CharField(
-        max_length=50,
-        default='Pending'
-    )
-
+    status = models.CharField(max_length=100, default='Pending')  # safe length
     total_jobs = models.IntegerField(default=0)
     created_jobs = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.file.name} ({self.status})"
-          
