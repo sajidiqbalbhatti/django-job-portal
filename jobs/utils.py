@@ -1,7 +1,9 @@
 import xml.etree.ElementTree as ET
 from django.utils.text import slugify
+from django.utils.html import strip_tags
 from jobs.models import Country, Category, Job, Company, JobType
 from django.contrib.auth import get_user_model
+import uuid
 
 User = get_user_model()
 
@@ -28,24 +30,25 @@ def process_csv(file, default_user_username='admin'):
     skipped = 0
     errors = 0
 
-    for job_elem in root.findall('job'):
+    for job_elem in root.findall('Job'):
         try:
-            title = job_elem.findtext('title')
-            company_name = job_elem.findtext('company')
-            category_name = job_elem.findtext('category')
-            country_name = job_elem.findtext('country')
-            description = job_elem.findtext('description') or ""
-            requirements = job_elem.findtext('requirements') or ""
-            location = job_elem.findtext('location') or ""
-            job_type_name = job_elem.findtext('job_type') or 'Full Time'
-            salary_min = job_elem.findtext('salary_min')
-            salary_max = job_elem.findtext('salary_max')
-            apply_url = job_elem.findtext('apply_url') or ""
+            # Required fields mapping
+            title = job_elem.findtext('Position')
+            company_name = job_elem.findtext('AdvertiserName')
+            category_name = job_elem.findtext('Classification')
+            country_name = job_elem.findtext('Country')
+            description = job_elem.findtext('Description') or ""
+            location = job_elem.findtext('Location') or ""
+            job_type_name = job_elem.findtext('EmploymentType') or "Full Time"
+            apply_url = job_elem.findtext('ApplicationURL') or ""
 
             # Skip incomplete rows
             if not all([title, company_name, category_name, country_name]):
                 skipped += 1
                 continue
+
+            # Clean HTML
+            description = strip_tags(description)
 
             # Country
             country = country_cache.get(country_name)
@@ -76,39 +79,41 @@ def process_csv(file, default_user_username='admin'):
                 )
                 company_cache[company_name] = company
 
-            # JobType
+            # JobType normalize
             normalized = job_type_name.lower().replace('-', ' ').replace('_', ' ').strip()
             job_type_name = " ".join(word.capitalize() for word in normalized.split())
             job_type_slug = slugify(job_type_name)
 
             job_type_obj = jobtype_cache.get(job_type_slug)
             if not job_type_obj:
-                job_type_obj = JobType.objects.create(name=job_type_name, slug=job_type_slug)
+                job_type_obj = JobType.objects.create(
+                    name=job_type_name,
+                    slug=job_type_slug
+                )
                 jobtype_cache[job_type_slug] = job_type_obj
 
             # Unique slug
-            job_slug = slugify(f"{title}-{company_name}-{country_name}")
+            base_slug = slugify(f"{title}-{company_name}-{country_name}")
+            job_slug = f"{base_slug}-{uuid.uuid4().hex[:6]}"
 
-            # Skip duplicates
             if job_slug in existing_slugs:
                 skipped += 1
                 continue
 
             existing_slugs.add(job_slug)
 
+            # Create job instance with only required fields
             job = Job(
                 title=title,
                 company=company,
                 category=category,
                 country=country,
                 description=description,
-                requirements=requirements,
                 location=location,
                 job_type=job_type_obj,
-                salary_min=salary_min or None,
-                salary_max=salary_max or None,
                 apply_url=apply_url,
                 slug=job_slug,
+                posted_by=default_user,
                 is_active=True
             )
 
@@ -121,5 +126,9 @@ def process_csv(file, default_user_username='admin'):
 
     Job.objects.bulk_create(jobs_to_create, batch_size=500)
 
-    # Return professional stats
-    return {"added": added, "skipped": skipped, "errors": errors}
+    return {
+        "added": added,
+        "skipped": skipped,
+        "errors": errors,
+        "total_processed": added + skipped + errors
+    }

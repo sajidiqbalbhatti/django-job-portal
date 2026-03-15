@@ -72,15 +72,13 @@
             </li>
           </ul>
 
-          {% comment %}
           <ul class="navbar-nav ms-lg-3 text-center">
             {% if user.is_authenticated %}
             <li class="nav-item">
-              <a
-                class="btn btn-outline-light btn-sm mt-2 mt-lg-0"
-                href="{% url 'users:logout' %}"
-                >Logout</a
-              >
+              <form action="{% url 'users:logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+              </form>
             </li>
             {% else %}
             <li class="nav-item me-lg-2">
@@ -90,16 +88,9 @@
                 >Login</a
               >
             </li>
-            <li class="nav-item">
-              <a
-                class="btn btn-primary btn-sm mt-2 mt-lg-0"
-                href="{% url 'users:signup' %}"
-                >Sign Up</a
-              >
-            </li>
+
             {% endif %}
           </ul>
-          {% endcomment %}
         </div>
       </div>
     </nav>

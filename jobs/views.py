@@ -1,17 +1,18 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from django.views import View
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, UpdateView, DeleteView
 from django.core.paginator import Paginator
+from django.urls import reverse_lazy
 from django.db.models import Q
 import csv
-from .utils import process_csv
+import uuid
 
-
-
-from jobs.models import Job, Category, Country, JobCSVImport, JobType, Company
+from .models import Job, Category, Country, JobCSVImport, JobType, Company
 from .forms import JobCSVImportForm
-
+from .utils import process_csv
 
 
 # ===============================
@@ -25,7 +26,6 @@ class BulkJobUploadView(View):
 
     def post(self, request):
         csv_file = request.FILES.get('csv_file')
-
         if not csv_file:
             messages.error(request, "No CSV file selected!")
             return redirect('jobs:bulk_upload')
@@ -35,11 +35,9 @@ class BulkJobUploadView(View):
 
         jobs_to_create = []
         row_count = 0
-
         for row in reader:
             row_count += 1
             try:
-                # ✅ Auto create or fetch FK
                 country, _ = Country.objects.get_or_create(name=row['country'].strip())
                 category, _ = Category.objects.get_or_create(name=row['category'].strip())
                 company, _ = Company.objects.get_or_create(
@@ -49,7 +47,6 @@ class BulkJobUploadView(View):
                 job_type_name = row.get('job_type', 'Full Time').strip()
                 job_type, _ = JobType.objects.get_or_create(name=job_type_name)
 
-                # ✅ Convert salary to int if present
                 salary_min = int(row['salary_min']) if row.get('salary_min') else None
                 salary_max = int(row['salary_max']) if row.get('salary_max') else None
 
@@ -68,7 +65,6 @@ class BulkJobUploadView(View):
                     is_active=True
                 )
                 jobs_to_create.append(job)
-
             except Exception as e:
                 print(f"Row {row_count} error: {e}")
 
@@ -77,17 +73,12 @@ class BulkJobUploadView(View):
             messages.success(request, f"{len(jobs_to_create)} jobs imported successfully!")
         else:
             messages.warning(request, "No jobs imported. Check CSV.")
-
         return redirect('jobs:bulk_upload')
 
 
 # ===============================
-# Job List
+# Job List with Filters + Pagination
 # ===============================
-from django.views.generic import ListView
-from .models import Job, Category, Country, JobType
-
-
 class JobListView(ListView):
     model = Job
     template_name = "job/job_search.html"
@@ -95,13 +86,10 @@ class JobListView(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        queryset = (
-            Job.objects.filter(is_active=True)
-            .select_related("company", "category", "country", "job_type")
-            .order_by("-created_at")
-        )
+        queryset = Job.objects.filter(is_active=True).select_related(
+            "company", "category", "country", "job_type"
+        ).order_by("-created_at")
 
-        # GET filters
         country = self.request.GET.get("country")
         category = self.request.GET.get("category")
         job_type = self.request.GET.get("job_type")
@@ -109,16 +97,12 @@ class JobListView(ListView):
 
         if country:
             queryset = queryset.filter(country__slug=country)
-
         if category:
             queryset = queryset.filter(category__slug=category)
-
         if job_type:
             queryset = queryset.filter(job_type__slug=job_type)
-
         if keyword:
             queryset = queryset.filter(title__icontains=keyword)
-
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -129,10 +113,12 @@ class JobListView(ListView):
         return context
 
 
-
 # ===============================
 # Job Detail
 # ===============================
+from django.views.generic import DetailView
+from .models import Job
+
 class JobDetailView(DetailView):
     model = Job
     template_name = 'job/job_detail.html'
@@ -141,17 +127,33 @@ class JobDetailView(DetailView):
     slug_url_kwarg = 'slug'
 
     def get_queryset(self):
+        """
+        Only active jobs, with related foreign key objects
+        for optimized queries.
+        """
         return Job.objects.filter(is_active=True).select_related(
             'company', 'category', 'country', 'job_type'
         )
 
+    def get_context_data(self, **kwargs):
+        """
+        Add split description and requirements to context
+        so that template can display them as bullet points.
+        """
+        context = super().get_context_data(**kwargs)
+        job = self.object
+
+        # Split by line breaks for bullet lists
+        context['description_lines'] = job.description.splitlines() if job.description else []
+        context['requirements_lines'] = job.requirements.splitlines() if job.requirements else []
+
+        return context
+
+
 
 # ===============================
-# Job Search (Professional)
+# Job Search Function
 # ===============================
-from django.core.paginator import Paginator
-from django.db.models import Q
-
 def job_search(request):
     keyword = request.GET.get('q', '')
     location = request.GET.get('location', '')
@@ -163,27 +165,21 @@ def job_search(request):
         'company', 'category', 'country', 'job_type'
     )
 
-    # 🔎 Keyword Search
     if keyword:
         jobs = jobs.filter(
             Q(title__icontains=keyword) |
             Q(description__icontains=keyword) |
             Q(company__name__icontains=keyword)
         )
-
     if location:
         jobs = jobs.filter(location__icontains=location)
-
     if job_type_slug:
         jobs = jobs.filter(job_type__slug__iexact=job_type_slug)
-
     if category_slug:
         jobs = jobs.filter(category__slug__iexact=category_slug)
-
     if country_slug:
         jobs = jobs.filter(country__slug__iexact=country_slug)
 
-    # ✅ Order + Pagination
     jobs = jobs.order_by('-created_at')
     paginator = Paginator(jobs, 20)
     page_number = request.GET.get('page')
@@ -200,15 +196,13 @@ def job_search(request):
         'countries': Country.objects.all(),
         'job_types': JobType.objects.all(),
     }
-
     return render(request, 'job/job_search.html', context)
 
 
 # ===============================
 # CSV Upload (Form Based)
 # ===============================
-from django.contrib import messages
-
+@login_required
 def upload_jobs_csv(request):
     if request.method == 'POST':
         form = JobCSVImportForm(request.POST, request.FILES)
@@ -216,26 +210,110 @@ def upload_jobs_csv(request):
             obj = form.save()
             try:
                 result = process_csv(obj.file)
-
                 obj.status = 'Completed'
                 obj.save()
-
-                # Professional message
                 msg = (
                     f"✅ {result['added']} jobs imported successfully. "
                     f"⚠️ {result['skipped']} duplicates skipped. "
                     f"❌ {result['errors']} errors."
                 )
                 messages.success(request, msg)
-
             except Exception as e:
                 obj.status = 'Failed'
                 obj.save()
                 messages.error(request, f"Import failed: {e}")
-
             return redirect('jobs:upload_jobs_csv')
     else:
         form = JobCSVImportForm()
-
     return render(request, 'job/upload_csv.html', {'form': form})
+
+
+# ===============================
+# CRUD Views (Slug-based)
+# ===============================
+# Job CRUD
+class JobUpdateView(UpdateView):
+    model = Job
+    fields = [
+        'title', 'company', 'description', 'requirements', 'location',
+        'job_type', 'category', 'country', 'salary_min', 'salary_max',
+        'apply_url', 'is_active'
+    ]
+    template_name = 'job/job_form.html'
+    slug_field = 'slug'
+    slug_url_kwarg = 'slug'
+    success_url = reverse_lazy('jobs:job_list')
+
+
+class JobDeleteView(DeleteView):
+    model = Job
+    template_name = 'job/job_confirm_delete.html'
+    slug_field = 'slug'
+    slug_url_kwarg = 'slug'
+    success_url = reverse_lazy('jobs:job_list')
+
+
+# Category CRUD
+# class CategoryUpdateView(UpdateView):
+#     model = Category
+#     fields = ['name']
+#     template_name = 'job/category_form.html'
+#     slug_field = 'slug'
+#     slug_url_kwarg = 'slug'
+#     success_url = reverse_lazy('jobs:job_list')
+
+
+# class CategoryDeleteView(DeleteView):
+#     model = Category
+#     template_name = 'job/category_confirm_delete.html'
+#     slug_field = 'slug'
+#     slug_url_kwarg = 'slug'
+#     success_url = reverse_lazy('jobs:job_list')
+
+
+# # Company CRUD
+# class CompanyUpdateView(UpdateView):
+#     model = Company
+#     fields = ['name', 'country']
+#     template_name = 'job/company_form.html'
+#     slug_field = 'slug'
+#     slug_url_kwarg = 'slug'
+#     success_url = reverse_lazy('jobs:job_list')
+
+
+# class CompanyDeleteView(DeleteView):
+#     model = Company
+#     template_name = 'job/company_confirm_delete.html'
+#     slug_field = 'slug'
+#     slug_url_kwarg = 'slug'
+#     success_url = reverse_lazy('jobs:job_list')
+
+
+# # Country CRUD
+# class CountryUpdateView(UpdateView):
+#     model = Country
+#     fields = ['name', 'code']
+#     template_name = 'job/country_form.html'
+#     slug_field = 'slug'
+#     slug_url_kwarg = 'slug'
+#     success_url = reverse_lazy('jobs:job_list')
+
+
+# class CountryDeleteView(DeleteView):
+#     model = Country
+#     template_name = 'job/country_confirm_delete.html'
+#     slug_field = 'slug'
+#     slug_url_kwarg = 'slug'
+#     success_url = reverse_lazy('jobs:job_list')
+
+
+# # JobType CRUD
+# class JobTypeUpdateView(UpdateView):
+#     model = JobType
+#     fields = ['name']
+#     template_name = 'job/jobtype_form.html'
+#     slug_field = 'slug'
+#     slug_url_kwarg = 'slug'
+#     success_url = reverse_lazy('jobs:job_list')
+
 

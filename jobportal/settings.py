@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'widget_tweaks', 
 
     'users',
     'jobs',
@@ -170,3 +171,7 @@ LOGGING = {
         },
     },
 }
+
+LOGIN_REDIRECT_URL = "core:home"
+LOGOUT_REDIRECT_URL = "users:login"
+LOGIN_URL = "users:login"

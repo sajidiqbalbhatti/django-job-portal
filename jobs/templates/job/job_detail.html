@@ -1,91 +1,69 @@
-{% extends "core/base.html" %}
-<!---title section-->
-{% block title %}Job_detail{% endblock %} {% block job_detail %}
-
+{% extends "core/base.html" %} {% block title %}Job Detail{% endblock %}
+<!--job detail-->
+{% block job_detail %}
 <div class="container py-5">
   <div class="row g-4">
     <!-- LEFT SIDE -->
     <div class="col-lg-8">
       <div class="card border-0 shadow-lg rounded-4">
         <div class="card-body p-4 p-md-5">
-          <!-- Title -->
+          <!-- Job Title -->
           <h2 class="fw-bold mb-4">{{ job.title }}</h2>
 
-          <!-- Meta Information -->
-          <div class="mb-4 small">
-            <div class="mb-2">
-              <span class="fw-semibold text-dark">Company:</span>
-              <span class="text-secondary">{{ job.company.name }}</span>
-            </div>
-
-            <div class="mb-2">
-              <span class="fw-semibold text-dark">Location:</span>
-              <span class="text-secondary">{{ job.location }}</span>
-            </div>
-
-            <div class="mb-2">
-              <span class="fw-semibold text-dark">Posted:</span>
-              <span class="text-secondary">
-                {{ job.created_at|date:"d M Y" }}
-              </span>
-            </div>
-
-            <!-- Job Type -->
-            <div class="mb-2">
-              <span class="fw-semibold text-dark">Job Type:</span>
-              {% if job.job_type == "FT" %}
-              <span class="badge bg-success-subtle text-success"
-                >Full Time</span
-              >
-              {% elif job.job_type == "PT" %}
-              <span class="badge bg-warning-subtle text-warning"
-                >Part Time</span
-              >
-              {% else %}
-              <span class="badge bg-info-subtle text-info">Internship</span>
+          <!-- Job at a Glance -->
+          <div class="mb-4">
+            <h5 class="fw-bold mb-3">📌 Job at a Glance</h5>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <strong>Company:</strong> {{ job.company.name }}
+              </li>
+              <li class="list-group-item">
+                <strong>Location:</strong> {{ job.location }}
+              </li>
+              <li class="list-group-item">
+                <strong>Posted:</strong> {{ job.created_at|date:"d M Y" }}
+              </li>
+              <li class="list-group-item">
+                <strong>Job Type:</strong> {{ job.job_type }}
+              </li>
+              {% if job.salary_min or job.salary_max %}
+              <li class="list-group-item">
+                <strong>Salary:</strong>
+                {% if job.salary_min and job.salary_max %} 💰 {{ job.salary_min
+                }} - {{ job.salary_max }} {% elif job.salary_min %} 💰 From {{
+                job.salary_min }} {% elif job.salary_max %} 💰 Up to {{
+                job.salary_max }} {% endif %}
+              </li>
               {% endif %}
-            </div>
-
-            <!-- Salary Range -->
-            {% if job.salary_min or job.salary_max %}
-            <div class="mb-2">
-              <span class="fw-semibold text-dark">Salary:</span>
-
-              {% if job.salary_min and job.salary_max %}
-              <span class="text-success fw-semibold">
-                💰 {{ job.salary_min }} - {{ job.salary_max }}
-              </span>
-
-              {% elif job.salary_min %}
-              <span class="text-success fw-semibold">
-                💰 From {{ job.salary_min }}
-              </span>
-
-              {% elif job.salary_max %}
-              <span class="text-success fw-semibold">
-                💰 Up to {{ job.salary_max }}
-              </span>
-              {% endif %}
-            </div>
-            {% endif %}
+            </ul>
           </div>
 
-          <hr />
-
-          <!-- Description -->
+          <!-- Job Description -->
           <div class="mb-4">
             <h5 class="fw-bold mb-3">📄 Job Description</h5>
-            <div class="text-secondary lh-lg">
-              {{ job.description|linebreaks }}
-            </div>
+            <ul class="list-group list-group-flush">
+              {% for line in description_lines %}
+              <li class="list-group-item">{{ line }}</li>
+              {% empty %}
+              <li class="list-group-item text-muted">
+                No description provided.
+              </li>
+              {% endfor %}
+            </ul>
           </div>
 
           <!-- Requirements -->
           <div class="mb-4">
             <h5 class="fw-bold mb-3">✅ Requirements</h5>
-            <div class="text-secondary lh-lg">
-              {{ job.requirements|linebreaks }}
-            </div>
+            <ul class="list-group list-group-flush">
+              {% for line in requirements_lines %}
+              <li class="list-group-item">{{ line }}</li>
+              {% empty %}
+              <li class="list-group-item text-muted">
+                No requirements specified.
+              </li>
+              {% endfor %}
+            </ul>
           </div>
         </div>
       </div>
@@ -98,25 +76,6 @@
         style="top: 100px"
       >
         <div class="card-body p-4 text-center">
-          <!-- Salary Highlight -->
-          {% if job.salary_min or job.salary_max %}
-          <div class="mb-4">
-            <div class="text-muted small">Salary Range</div>
-
-            {% if job.salary_min and job.salary_max %}
-            <h4 class="fw-bold text-success">
-              💰 {{ job.salary_min }} - {{ job.salary_max }}
-            </h4>
-
-            {% elif job.salary_min %}
-            <h4 class="fw-bold text-success">💰 From {{ job.salary_min }}</h4>
-
-            {% elif job.salary_max %}
-            <h4 class="fw-bold text-success">💰 Up to {{ job.salary_max }}</h4>
-            {% endif %}
-          </div>
-          {% endif %}
-
           <!-- Apply Button -->
           <a
             href="{{ job.apply_url }}"
@@ -136,5 +95,4 @@
     </div>
   </div>
 </div>
-
 {% endblock %}
