@@ -10,7 +10,7 @@ User = get_user_model()
 # =========================
 class Category(models.Model):
     name = models.CharField(max_length=150, unique=True)
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(max_length=255,unique=True, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -27,7 +27,7 @@ class Category(models.Model):
 class Country(models.Model):
     name = models.CharField(max_length=150, unique=True)
     code = models.CharField(max_length=5, blank=True)
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(max_length=255,unique=True, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -45,7 +45,7 @@ class Country(models.Model):
 # =========================
 class JobType(models.Model):
     name = models.CharField(max_length=150, unique=True)  # safe length
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(max_length=255,unique=True, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -61,7 +61,7 @@ class JobType(models.Model):
 # =========================
 class Company(models.Model):
     name = models.CharField(max_length=255, unique=True)  # safe length
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(max_length=255,unique=True, blank=True)
     country = models.ForeignKey(Country, on_delete=models.CASCADE, related_name="companies")
 
     def save(self, *args, **kwargs):
@@ -92,7 +92,7 @@ class Job(models.Model):
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    slug = models.SlugField(unique=True, blank=True, null=True)
+    slug = models.SlugField(max_length=255, unique=True, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
