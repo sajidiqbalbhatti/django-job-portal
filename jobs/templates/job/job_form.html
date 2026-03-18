@@ -1,32 +1,50 @@
-{% extends 'core/base.html' %}
-<!--job-->
-{% block title %}Edit Job - {{ object.title }}{% endblock %} {% block content %}
-<div class="row justify-content-center">
-  <div class="col-md-6">
-    <div class="card shadow-sm">
-      <div class="card-body">
-        <h2 class="card-title mb-4 text-center">
-          Edit Job: {{ object.title }}
-        </h2>
+{% extends "core/base.html" %} {% block title %}Edit Job - {{ object.title }}
+<!--job detail-->
+{%endblock %} {% block content %}
+<div class="container py-5">
+  <div class="text-center mb-4">
+    <h2 class="fw-bold">Edit Job</h2>
+    <p class="text-muted">
+      Update the job details for <strong>{{ object.title }}</strong>
+    </p>
+  </div>
 
-        <form method="post">
-          {% csrf_token %} {% for field in form %}
-          <div class="mb-3">
-            <label for="{{ field.id_for_label }}" class="form-label"
-              >{{ field.label }}</label
-            >
-            {{ field }} {% if field.errors %}
-            <div class="text-danger small">{{ field.errors }}</div>
-            {% endif %} {% if field.help_text %}
-            <div class="form-text">{{ field.help_text }}</div>
-            {% endif %}
-          </div>
-          {% endfor %}
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+      <div class="card shadow-lg border-0">
+        <div class="card-header bg-primary text-white text-center">
+          <h5 class="mb-0">Update Job Information</h5>
+        </div>
 
-          <button type="submit" class="btn btn-primary w-100">
-            Save Changes
-          </button>
-        </form>
+        <div class="card-body p-4">
+          <form method="post">
+            {% csrf_token %} {% for field in form %}
+            <div class="mb-3">
+              <label class="form-label fw-semibold"> {{ field.label }} </label>
+
+              <!-- Correct Field Render -->
+              {{ field }} {% if field.help_text %}
+              <div class="form-text">{{ field.help_text }}</div>
+              {% endif %} {% if field.errors %}
+              <div class="text-danger small">{{ field.errors }}</div>
+              {% endif %}
+            </div>
+            {% endfor %}
+
+            <div class="d-flex justify-content-between mt-4">
+              <a
+                href="{% url 'jobs:job_detail' object.slug %}"
+                class="btn btn-outline-secondary"
+              >
+                Cancel
+              </a>
+
+              <button type="submit" class="btn btn-primary px-4">
+                Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>

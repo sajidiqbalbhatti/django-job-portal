@@ -173,5 +173,5 @@ LOGGING = {
 }
 
 LOGIN_REDIRECT_URL = "core:home"
-LOGOUT_REDIRECT_URL = "users:login"
+LOGOUT_REDIRECT_URL = "/"
 LOGIN_URL = "users:login"

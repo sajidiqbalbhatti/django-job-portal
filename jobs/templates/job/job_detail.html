@@ -1,14 +1,23 @@
 {% extends "core/base.html" %} {% block title %}Job Detail{% endblock %}
 <!--job detail-->
-{% block job_detail %}
+{%block job_detail %}
 <div class="container py-5">
   <div class="row g-4">
     <!-- LEFT SIDE -->
     <div class="col-lg-8">
       <div class="card border-0 shadow-lg rounded-4">
         <div class="card-body p-4 p-md-5">
-          <!-- Job Title -->
-          <h2 class="fw-bold mb-4">{{ job.title }}</h2>
+          <!-- Title + Edit Button -->
+          <div class="d-flex justify-content-between align-items-start mb-4">
+            <h2 class="fw-bold mb-0">{{ job.title }}</h2>
+
+            <a
+              href="{% url 'jobs:job_edit' job.slug %}"
+              class="btn btn-outline-primary btn-sm"
+            >
+              ✏️ Edit Job
+            </a>
+          </div>
 
           <!-- Job at a Glance -->
           <div class="mb-4">
@@ -26,9 +35,11 @@
               <li class="list-group-item">
                 <strong>Job Type:</strong> {{ job.job_type }}
               </li>
+
               {% if job.salary_min or job.salary_max %}
               <li class="list-group-item">
                 <strong>Salary:</strong>
+
                 {% if job.salary_min and job.salary_max %} 💰 {{ job.salary_min
                 }} - {{ job.salary_max }} {% elif job.salary_min %} 💰 From {{
                 job.salary_min }} {% elif job.salary_max %} 💰 Up to {{
@@ -84,6 +95,18 @@
           >
             Apply Now
           </a>
+
+          <!-- Edit Button (Sidebar optional) -->
+          <div class="d-flex justify-content-between align-items-start mb-4">
+            {% if request.user.is_authenticated %}
+            <a
+              href="{% url 'jobs:job_edit' job.slug %}"
+              class="btn btn-outline-secondary w-100 mb-3"
+            >
+              ✏️ Edit Job
+            </a>
+            {% endif %}
+          </div>
 
           <!-- Company -->
           <div class="border-top pt-3 mt-3">

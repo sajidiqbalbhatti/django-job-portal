@@ -12,7 +12,7 @@ import uuid
 
 from .models import Job, Category, Country, JobCSVImport, JobType, Company
 from .forms import JobCSVImportForm
-from .utils import process_csv
+from .utils import process_xml_jobs
 
 
 # ===============================
@@ -202,37 +202,59 @@ def job_search(request):
 # ===============================
 # CSV Upload (Form Based)
 # ===============================
+
+
+
+
 @login_required
 def upload_jobs_csv(request):
+    """
+    Handle job XML/CSV upload and processing.
+    - Save uploaded file to JobCSVImport model.
+    - Process jobs (create, update, delete) via process_xml_jobs.
+    - Display professional success/error messages including duplicates.
+    """
     if request.method == 'POST':
         form = JobCSVImportForm(request.POST, request.FILES)
         if form.is_valid():
-            obj = form.save()
+            # Save uploaded file with 'Pending' status
+            obj = form.save(commit=False)
+            obj.status = 'Pending'
+            obj.save()
+
             try:
-                result = process_csv(obj.file)
+                # Process the uploaded XML/CSV file
+                result = process_xml_jobs(obj.file)
+
+                # Update import status
                 obj.status = 'Completed'
                 obj.save()
+
+                # Build professional message
                 msg = (
-                    f"✅ {result['added']} jobs imported successfully. "
-                    f"⚠️ {result['skipped']} duplicates skipped. "
-                    f"❌ {result['errors']} errors."
+                    f"✅ {result.get('created', 0)} jobs created. "
+                    f"🔄 {result.get('updated', 0)} jobs updated. "
+                    f"🗑️ {result.get('deleted', 0)} jobs deleted. "
+                    f"⚠️ {result.get('skipped', 0)} skipped. "
+                    f"♻️ {result.get('duplicate', 0)} duplicates."
                 )
                 messages.success(request, msg)
+
             except Exception as e:
                 obj.status = 'Failed'
                 obj.save()
                 messages.error(request, f"Import failed: {e}")
+
             return redirect('jobs:upload_jobs_csv')
     else:
         form = JobCSVImportForm()
+
     return render(request, 'job/upload_csv.html', {'form': form})
-
-
 # ===============================
 # CRUD Views (Slug-based)
 # ===============================
 # Job CRUD
-class JobUpdateView(UpdateView):
+class JobUpdateView(LoginRequiredMixin, UpdateView):
     model = Job
     fields = [
         'title', 'company', 'description', 'requirements', 'location',
