@@ -1,17 +1,15 @@
-{% extends "core/base.html" %} {% block title %}Job Detail{% endblock %}
-<!--job detail-->
-{%block job_detail %}
+{% extends "core/base.html" %}
+<!--jobs titles-->
+{% block title %}Job Detail{% endblock %} {% block job_detail %}
 <div class="container py-5">
   <div class="row g-4">
     <!-- LEFT SIDE -->
     <div class="col-lg-8">
       <div class="card border-0 shadow-lg rounded-4">
         <div class="card-body p-4 p-md-5">
-          <!-- Title + Edit Button -->
-          <div class="d-flex justify-content-between align-items-start mb-4">
-            <h2 class="fw-bold mb-0">{{ job.title }}</h2>
-
-           
+          <!-- Title -->
+          <div class="mb-4">
+            <h2 class="fw-bold">{{ job.title }}</h2>
           </div>
 
           <!-- Job at a Glance -->
@@ -34,7 +32,6 @@
               {% if job.salary_min or job.salary_max %}
               <li class="list-group-item">
                 <strong>Salary:</strong>
-
                 {% if job.salary_min and job.salary_max %} 💰 {{ job.salary_min
                 }} - {{ job.salary_max }} {% elif job.salary_min %} 💰 From {{
                 job.salary_min }} {% elif job.salary_max %} 💰 Up to {{
@@ -47,29 +44,27 @@
           <!-- Job Description -->
           <div class="mb-4">
             <h5 class="fw-bold mb-3">📄 Job Description</h5>
-            <ul class="list-group list-group-flush">
-              {% for line in description_lines %}
-              <li class="list-group-item">{{ line }}</li>
-              {% empty %}
-              <li class="list-group-item text-muted">
-                No description provided.
-              </li>
-              {% endfor %}
-            </ul>
+
+            {% if job.description %}
+            <div class="p-3 border rounded-3 bg-light">
+              {{ job.description|safe }}
+            </div>
+            {% else %}
+            <p class="text-muted">No description provided.</p>
+            {% endif %}
           </div>
 
           <!-- Requirements -->
           <div class="mb-4">
             <h5 class="fw-bold mb-3">✅ Requirements</h5>
-            <ul class="list-group list-group-flush">
-              {% for line in requirements_lines %}
-              <li class="list-group-item">{{ line }}</li>
-              {% empty %}
-              <li class="list-group-item text-muted">
-                No requirements specified.
-              </li>
-              {% endfor %}
-            </ul>
+
+            {% if job.requirements %}
+            <div class="p-3 border rounded-3 bg-light">
+              {{ job.requirements|safe }}
+            </div>
+            {% else %}
+            <p class="text-muted">No requirements specified.</p>
+            {% endif %}
           </div>
         </div>
       </div>
@@ -88,22 +83,20 @@
             target="_blank"
             class="btn btn-primary w-100 btn-lg fw-semibold mb-3 rounded-3"
           >
-            Apply Now
+            🚀 Apply Now
           </a>
 
-          <!-- Edit Button (Sidebar optional) -->
-          <div class="d-flex justify-content-between align-items-start mb-4">
-            {% if request.user.is_authenticated %}
-            <a
-              href="{% url 'jobs:job_edit' job.slug %}"
-              class="btn btn-outline-secondary w-100 mb-3"
-            >
-              ✏️ Edit Job
-            </a>
-            {% endif %}
-          </div>
+          <!-- Edit Button -->
+          {% if request.user.is_authenticated %}
+          <a
+            href="{% url 'jobs:job_edit' job.slug %}"
+            class="btn btn-outline-secondary w-100 mb-3"
+          >
+            ✏️ Edit Job
+          </a>
+          {% endif %}
 
-          <!-- Company -->
+          <!-- Company Info -->
           <div class="border-top pt-3 mt-3">
             <div class="text-muted small">Company</div>
             <strong>{{ job.company.name }}</strong>
