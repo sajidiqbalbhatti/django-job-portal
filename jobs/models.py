@@ -77,7 +77,7 @@ class Company(models.Model):
 # Job
 # =========================
 class Job(models.Model):
-    external_id = models.CharField(max_length=255,null=True, unique=True)
+    external_id = models.CharField(max_length=255, null=True, blank=True)
     title = models.CharField(max_length=255)  # safe length
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='jobs')
     posted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
