@@ -134,7 +134,13 @@ def process_xml_jobs(zip_url, default_user_username="admin"):
             company_key = company_name.lower()
             company = company_cache.get(company_key)
             if not company:
-                company = Company.objects.create(name=company_name, slug=slugify(company_name), country=country)
+                company, created = Company.objects.get_or_create(
+    name=company_name,
+    defaults={
+        "slug": slugify(company_name),
+        "country": country
+    }
+)
                 company_cache[company_key] = company
 
             # =========================
