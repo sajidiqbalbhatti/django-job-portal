@@ -35,12 +35,20 @@
           >
             Explore Jobs
           </a>
+          {% comment %}
           <a
             href="{% url 'jobs:upload_jobs_csv' %}"
             class="btn btn-outline-dark btn-lg px-5 py-3 w-100 w-sm-auto text-center"
           >
             Post a Job
           </a>
+          {% endcomment %}
+          <form method="post" action="{% url 'jobs:fetch_xml_feed' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success">
+              Fetch & Process XML Feed
+            </button>
+          </form>
         </div>
       </div>
     </div>

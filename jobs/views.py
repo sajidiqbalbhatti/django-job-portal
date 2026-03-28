@@ -275,67 +275,35 @@ class JobDeleteView(DeleteView):
     success_url = reverse_lazy('jobs:job_list')
 
 
-# Category CRUD
-# class CategoryUpdateView(UpdateView):
-#     model = Category
-#     fields = ['name']
-#     template_name = 'job/category_form.html'
-#     slug_field = 'slug'
-#     slug_url_kwarg = 'slug'
-#     success_url = reverse_lazy('jobs:job_list')
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect
+from django.contrib import messages
+from .utils import process_xml_jobs
 
+@login_required
+def fetch_xml_feed(request):
+    """
+    Fetch XML feed and process it automatically.
+    Only logged-in users (admin/staff) can access this.
+    """
+    try:
+        # XML feed URL
+        xml_url = 'https://www.jobg8.com/fileserver/jobs.aspx?username=9C69EA0F9C&password=04E077D396&accountnumber=824567&filename=Jobs.zip'
+        
+        # Call your existing utility function
+        result = process_xml_jobs(xml_url)
 
-# class CategoryDeleteView(DeleteView):
-#     model = Category
-#     template_name = 'job/category_confirm_delete.html'
-#     slug_field = 'slug'
-#     slug_url_kwarg = 'slug'
-#     success_url = reverse_lazy('jobs:job_list')
+        # Build professional message
+        msg = (
+            f"✅ {result.get('created', 0)} jobs created. "
+            f"🔄 {result.get('updated', 0)} jobs updated. "
+            f"🗑️ {result.get('deleted', 0)} jobs deleted. "
+            f"⚠️ {result.get('skipped', 0)} skipped. "
+            f"♻️ {result.get('duplicate', 0)} duplicates."
+        )
+        messages.success(request, msg)
 
+    except Exception as e:
+        messages.error(request, f"XML fetch failed: {e}")
 
-# # Company CRUD
-# class CompanyUpdateView(UpdateView):
-#     model = Company
-#     fields = ['name', 'country']
-#     template_name = 'job/company_form.html'
-#     slug_field = 'slug'
-#     slug_url_kwarg = 'slug'
-#     success_url = reverse_lazy('jobs:job_list')
-
-
-# class CompanyDeleteView(DeleteView):
-#     model = Company
-#     template_name = 'job/company_confirm_delete.html'
-#     slug_field = 'slug'
-#     slug_url_kwarg = 'slug'
-#     success_url = reverse_lazy('jobs:job_list')
-
-
-# # Country CRUD
-# class CountryUpdateView(UpdateView):
-#     model = Country
-#     fields = ['name', 'code']
-#     template_name = 'job/country_form.html'
-#     slug_field = 'slug'
-#     slug_url_kwarg = 'slug'
-#     success_url = reverse_lazy('jobs:job_list')
-
-
-# class CountryDeleteView(DeleteView):
-#     model = Country
-#     template_name = 'job/country_confirm_delete.html'
-#     slug_field = 'slug'
-#     slug_url_kwarg = 'slug'
-#     success_url = reverse_lazy('jobs:job_list')
-
-
-# # JobType CRUD
-# class JobTypeUpdateView(UpdateView):
-#     model = JobType
-#     fields = ['name']
-#     template_name = 'job/jobtype_form.html'
-#     slug_field = 'slug'
-#     slug_url_kwarg = 'slug'
-#     success_url = reverse_lazy('jobs:job_list')
-
-
+    return redirect('core:home')  # ya jis page pe redirect karna chahte ho
