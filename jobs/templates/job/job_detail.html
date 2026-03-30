@@ -47,7 +47,17 @@
 
             {% if job.description %}
             <div class="p-3 border rounded-3 bg-light">
-              {{ job.description|safe }}
+              <!-- Short Description (Preview) -->
+              <p>{{ job.description|striptags|truncatewords:25 }}</p>
+
+              <!-- Read More Button -->
+              <a
+                href="{{ job.apply_url }}"
+                target="_blank"
+                class="btn btn-sm btn-primary"
+              >
+                Read More
+              </a>
             </div>
             {% else %}
             <p class="text-muted">No description provided.</p>
