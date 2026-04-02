@@ -154,33 +154,48 @@ class JobDetailView(DetailView):
 # ===============================
 # Job Search Function
 # ===============================
+
 def job_search(request):
-    keyword = request.GET.get('q', '')
-    location = request.GET.get('location', '')
-    job_type_slug = request.GET.get('job_type', '')
-    category_slug = request.GET.get('category', '')
-    country_slug = request.GET.get('country', '')
+    keyword = request.GET.get('q', '').strip()
+    location = request.GET.get('location', '').strip()
+    job_type_slug = request.GET.get('job_type', '').strip()
+    category_slug = request.GET.get('category', '').strip()
+    country_slug = request.GET.get('country', '').strip()
 
     jobs = Job.objects.filter(is_active=True).select_related(
         'company', 'category', 'country', 'job_type'
     )
 
+    # Keyword filter (title, description, company)
     if keyword:
         jobs = jobs.filter(
-            Q(title__icontains=keyword) |
-            Q(description__icontains=keyword) |
-            Q(company__name__icontains=keyword)
+            Q(title__icontains=keyword) 
+           
         )
+
+    # Location filter (city OR country)
     if location:
-        jobs = jobs.filter(location__icontains=location)
+        jobs = jobs.filter(
+            Q(location__icontains=location) |
+            Q(country__name__icontains=location)
+        )
+
+    # Job type filter
     if job_type_slug:
         jobs = jobs.filter(job_type__slug__iexact=job_type_slug)
+
+    # Category filter
     if category_slug:
         jobs = jobs.filter(category__slug__iexact=category_slug)
+
+    # Country filter (exact slug match)
     if country_slug:
         jobs = jobs.filter(country__slug__iexact=country_slug)
 
+    # Sort by newest first
     jobs = jobs.order_by('-created_at')
+
+    # Pagination (20 jobs per page)
     paginator = Paginator(jobs, 20)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -196,6 +211,7 @@ def job_search(request):
         'countries': Country.objects.all(),
         'job_types': JobType.objects.all(),
     }
+
     return render(request, 'job/job_search.html', context)
 
 
