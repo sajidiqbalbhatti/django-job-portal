@@ -48,7 +48,7 @@
             {% if job.description %}
             <div class="p-3 border rounded-3 bg-light">
               <!-- Short Description (Preview) -->
-              <p>{{ job.description|striptags|truncatewords:25 }}</p>
+              <p>{{ job.description|striptags|truncatewords:50 }}</p>
 
               <!-- Read More Button -->
               <a
