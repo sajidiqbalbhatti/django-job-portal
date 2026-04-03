@@ -48,8 +48,9 @@
             {% if job.description %}
             <div class="p-3 border rounded-3 bg-light">
               <!-- Short Description (Preview) -->
-              <p>{{ job.description|striptags|truncatewords:50 }}</p>
-
+              <p class="job-desc">
+                {{ job.description|truncatewords_html:70|safe }}
+              </p>
               <!-- Read More Button -->
               <a
                 href="{{ job.apply_url }}"
