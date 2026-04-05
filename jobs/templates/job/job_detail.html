@@ -56,9 +56,19 @@
                 href="{{ job.apply_url }}"
                 target="_blank"
                 class="btn btn-sm btn-primary"
+                onclick="trackClick()"
               >
                 Read More
               </a>
+
+              <script>
+                function trackClick() {
+                  gtag("event", "apply_click", {
+                    event_category: "job",
+                    event_label: "read_more",
+                  });
+                }
+              </script>
             </div>
             {% else %}
             <p class="text-muted">No description provided.</p>
@@ -95,9 +105,19 @@
             href="{{ job.apply_url }}"
             target="_blank"
             class="btn btn-primary w-100 btn-lg fw-semibold mb-3 rounded-3"
+            onclick="trackApplyClick()"
           >
             🚀 Apply Now
           </a>
+
+          <script>
+            function trackApplyClick() {
+              gtag("event", "apply_click", {
+                event_category: "job",
+                event_label: "apply_button",
+              });
+            }
+          </script>
 
           <!-- Edit Button -->
           {% if request.user.is_authenticated %}
